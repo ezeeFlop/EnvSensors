@@ -20,6 +20,7 @@ struct TempSensor : Service::TemperatureSensor {     // A standalone Temperature
     float temperature = dht.getTemperature();
 
     temp = new Characteristic::CurrentTemperature(temperature);        // instantiate the Current Temperature Characteristic
+    temp->setRange(-50, 100);                                          // expand the range from the HAP default of 0-100 to -50 to 100 to allow for negative temperatures
 
     LOG0("Configuring Temperature Sensor");           // initialization message
 
@@ -32,7 +33,7 @@ struct TempSensor : Service::TemperatureSensor {     // A standalone Temperature
       
       temp->setVal(temperature);                            // set the new temperature; this generates an Event Notification and also resets the elapsed time
       
-      LOG1("Temperature Update %s\n", temperature);
+      LOG1("Temperature Update %f\n", temperature);
     }
     
   } // loop
@@ -64,6 +65,7 @@ struct HumiditySensor : Service::HumiditySensor {     // A standalone Air Qualit
      if(humidity->timeVal()>5000){ 
       float h = dht.getHumidity();
       humidity->setVal(h);
+      LOG1("Humidity Update %f\n", h);
      }
   } 
 
